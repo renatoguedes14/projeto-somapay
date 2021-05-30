@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.renato.projetoSomapay.controller.request.TransacaoRequest;
@@ -103,35 +102,7 @@ public class EmpresaService {
 		funcionarioRepository.save(funcionario);
 
 	}
-
-	public ResponseEntity<?> transferirC(final TransacaoRequest form) {
-		Optional<Empresa> empresaOpt = empresaRepository.findById(form.getEmpresaNumSequencial());
-		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(form.getCpfFuncionario());
-
-		if (!empresaOpt.isPresent()) {
-			return ResponseEntity.badRequest().body("Empresa não encontrada na base de dados. ");
-		}
-
-		if (!funcionarioOpt.isPresent()) {
-			return ResponseEntity.badRequest().body("Funcionário não encontrado na base de dados. ");
-		}
-
-		Empresa empresa = empresaOpt.get();
-		Funcionario funcionario = funcionarioOpt.get();
-
-		if (form.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
-			return ResponseEntity.badRequest().body("O saldo é insuficiente para realizar a transação. ");
-		}
-
-		empresa.sacar(form.getValorTransacao());
-		funcionario.depositar(form.getValorTransacao());
-
-		empresaRepository.save(empresa);
-		funcionarioRepository.save(funcionario);
-
-		return ResponseEntity.ok("Transação realizada com sucesso. ");
-	}
-
+	
 	private Empresa findByCnpj(final EmpresaDTO empresaDto) {
 		Empresa empresa = empresaRepository.findByCnpj(empresaDto.getCnpj());
 		if (empresa != null) {

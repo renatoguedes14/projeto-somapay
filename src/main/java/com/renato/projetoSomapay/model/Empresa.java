@@ -96,16 +96,4 @@ public class Empresa implements Serializable {
 	public void setFuncionariosList(List<Funcionario> funcionariosList) {
 		this.funcionariosList = funcionariosList;
 	}
-
-	public void sacar(BigDecimal valor) {
-		if (valor.compareTo(BigDecimal.ZERO) == 1 && valor.compareTo(this.saldoAtual) <= 0) {
-			this.saldoAtual = this.saldoAtual.subtract(valor);
-		}
-	}
-
-	public void depositar(BigDecimal valor) {
-		if (valor.compareTo(BigDecimal.ZERO) == 1) {
-			this.saldoAtual = this.saldoAtual.add(valor);
-		}
-	}
 }

@@ -22,7 +22,7 @@ public class TransacaoService {
 	@Autowired
 	FuncionarioRepository funcionarioRepository;
 
-	public Empresa sacar(Long numSequencial, BigDecimal valor) {
+	public Empresa sacar(final Long numSequencial, final BigDecimal valor) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(numSequencial);
 		Empresa empresa = empresaOpt.get();
 		empresa.setSaldoAtual(empresaOpt.get().getSaldoAtual());
@@ -33,7 +33,7 @@ public class TransacaoService {
 		return null;
 	}
 	
-	public Funcionario depositar(Long numSequencial, BigDecimal valor) {
+	public Funcionario depositar(final Long numSequencial, final BigDecimal valor) {
 		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(numSequencial);
 		Funcionario funcionario = funcionarioOpt.get();
 		funcionario.setSaldoAtual(funcionarioOpt.get().getSaldoAtual());

@@ -26,7 +26,7 @@ public class FuncionarioService {
 	@Autowired
 	private EmpresaRepository empresaRepository;
 
-	public Funcionario buscarFuncionario(Long numSequencial) {
+	public Funcionario buscarFuncionario(final Long numSequencial) {
 		Optional<Funcionario> funcionario = funcionarioRepository.findById(numSequencial);
 		return funcionario.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. "));
 	}
@@ -35,7 +35,7 @@ public class FuncionarioService {
 		return funcionarioRepository.findAll();
 	}
 
-	public Funcionario inserir(FuncionarioDTO funcionarioDto) {
+	public Funcionario inserir(final FuncionarioDTO funcionarioDto) {
 		if (findByCpf(funcionarioDto) != null) {
 			throw new DataIntegrityViolationException("Funcionário já cadastrado. ");
 		}
@@ -44,7 +44,7 @@ public class FuncionarioService {
 				funcionarioDto.getEndereco(), funcionarioDto.getSaldoAtual(), empresa.get()));
 	}
 
-	public Funcionario atualizarDados(Long numSequencial, @Valid FuncionarioDTO funcionarioDto) {
+	public Funcionario atualizarDados(final Long numSequencial, @Valid FuncionarioDTO funcionarioDto) {
 		Funcionario funcionario = buscarFuncionario(numSequencial);
 
 		if (findByCpf(funcionarioDto) != null && findByCpf(funcionarioDto).getNumSequencial() != numSequencial) {
@@ -60,12 +60,12 @@ public class FuncionarioService {
 		return funcionarioRepository.save(funcionario);
 	}
 
-	public void remover(Long numSequencial) {
+	public void remover(final Long numSequencial) {
 		Funcionario funcionario = buscarFuncionario(numSequencial);
 		funcionarioRepository.delete(funcionario);
 	}
 
-	public Funcionario consultarSaldo(Long numSequencial) {
+	public Funcionario consultarSaldo(final Long numSequencial) {
 		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(numSequencial);
 		if (funcionarioOpt.isPresent()) {
 			return funcionarioOpt.get();
@@ -73,7 +73,7 @@ public class FuncionarioService {
 		throw new ObjectNotFoundException("Objeto não encontrado. ");
 	}
 
-	private Funcionario findByCpf(FuncionarioDTO funcionarioDto) {
+	private Funcionario findByCpf(final FuncionarioDTO funcionarioDto) {
 		Funcionario funcionario = funcionarioRepository.findByCpf(funcionarioDto.getCpf());
 		if (funcionario != null) {
 			return funcionario;
