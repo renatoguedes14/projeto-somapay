@@ -15,8 +15,15 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "empresa")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Empresa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,63 +44,11 @@ public class Empresa implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "empresa")
 	private List<Funcionario> funcionariosList;
 
-	public Empresa() {
-		super();
-	}
-
 	public Empresa(String nome, String cnpj, String endereco, BigDecimal saldoAtual) {
 		super();
 		this.nome = nome;
 		this.cnpj = cnpj;
 		this.endereco = endereco;
 		this.saldoAtual = saldoAtual;
-	}
-
-	public Long getNumSequencial() {
-		return numSequencial;
-	}
-
-	public void setNumSequencial(Long numSequencial) {
-		this.numSequencial = numSequencial;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public BigDecimal getSaldoAtual() {
-		return saldoAtual;
-	}
-
-	public void setSaldoAtual(BigDecimal saldoAtual) {
-		this.saldoAtual = saldoAtual;
-	}
-
-	public List<Funcionario> getFuncionariosList() {
-		return funcionariosList;
-	}
-
-	public void setFuncionariosList(List<Funcionario> funcionariosList) {
-		this.funcionariosList = funcionariosList;
 	}
 }

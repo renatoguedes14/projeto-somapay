@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import com.renato.projetoSomapay.model.Funcionario;
 
+import lombok.Data;
+
+@Data
 public class FuncionarioDTO {
 
 	private Long numSequencial;
@@ -24,53 +27,5 @@ public class FuncionarioDTO {
 		this.endereco = funcionario.getEndereco();
 		this.empresaNumSequencial = funcionario.getEmpresa().getNumSequencial();
 		this.saldoAtual = funcionario.getSaldoAtual();
-	}
-
-	public Long getNumSequencial() {
-		return numSequencial;
-	}
-
-	public void setNumSequencial(Long numSequencial) {
-		this.numSequencial = numSequencial;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public Long getEmpresaNumSequencial() {
-		return empresaNumSequencial;
-	}
-
-	public void setEmpresaNumSequencial(Long empresaNumSequencial) {
-		this.empresaNumSequencial = empresaNumSequencial;
-	}
-
-	public BigDecimal getSaldoAtual() {
-		return saldoAtual;
-	}
-
-	public void setSaldoAtual(BigDecimal saldoAtual) {
-		this.saldoAtual = saldoAtual;
 	}
 }

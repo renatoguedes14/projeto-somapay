@@ -10,8 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Table(name = "funcionario")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Funcionario implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,64 +41,12 @@ public class Funcionario implements Serializable {
 	@JoinColumn(name = "empresa", referencedColumnName = "num_sequencial")
 	private Empresa empresa;
 
-	public Funcionario() {
-		super();
-	}
-
 	public Funcionario(String nome, String cpf, String endereco, BigDecimal saldoAtual, Empresa empresa) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
 		this.endereco = endereco;
 		this.saldoAtual = saldoAtual;
-		this.empresa = empresa;
-	}
-
-	public Long getNumSequencial() {
-		return numSequencial;
-	}
-
-	public void setNumSequencial(Long numSequencial) {
-		this.numSequencial = numSequencial;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public BigDecimal getSaldoAtual() {
-		return saldoAtual;
-	}
-
-	public void setSaldoAtual(BigDecimal saldoAtual) {
-		this.saldoAtual = saldoAtual;
-	}
-
-	public Empresa getEmpresa() {
-		return empresa;
-	}
-
-	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
 }

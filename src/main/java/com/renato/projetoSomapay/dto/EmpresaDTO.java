@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import com.renato.projetoSomapay.model.Empresa;
 
+import lombok.Data;
+
+@Data
 public class EmpresaDTO {
 
 	private Long numSequencial;
@@ -23,45 +26,5 @@ public class EmpresaDTO {
 		this.cnpj = empresa.getCnpj();
 		this.endereco = empresa.getEndereco();
 		this.saldoAtual = empresa.getSaldoAtual();
-	}
-
-	public Long getNumSequencial() {
-		return numSequencial;
-	}
-
-	public void setNumSequencial(Long numSequencial) {
-		this.numSequencial = numSequencial;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public BigDecimal getSaldoAtual() {
-		return saldoAtual;
-	}
-
-	public void setSaldoAtual(BigDecimal saldoAtual) {
-		this.saldoAtual = saldoAtual;
 	}
 }

@@ -23,6 +23,9 @@ import com.renato.projetoSomapay.dto.FuncionarioDTO;
 import com.renato.projetoSomapay.model.Funcionario;
 import com.renato.projetoSomapay.service.FuncionarioService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+@Api(value = "/funcionario", description = "Operações de cadastro de funcionário, busca, atualização, remoção e consulta de saldo. ")
 @RestController
 @RequestMapping(value = "/funcionario")
 public class FuncionarioController {
@@ -30,12 +33,14 @@ public class FuncionarioController {
 	@Autowired
 	private FuncionarioService funcionarioService;
 
+	@ApiOperation(value = "Realiza a busca de um funcionário pelo seu número sequencial único. ")
 	@GetMapping("/{numSequencial}")
 	public ResponseEntity<FuncionarioDTO> buscar(@PathVariable final Long numSequencial) {
 		FuncionarioDTO funcionarioDto = new FuncionarioDTO(funcionarioService.buscarFuncionario(numSequencial));
 		return ResponseEntity.ok().body(funcionarioDto);
 	}
 
+	@ApiOperation(value = "Realiza a busca de todas os funcionários inseridos. ")
 	@GetMapping
 	public ResponseEntity<List<FuncionarioDTO>> buscarTodos() {
 		List<FuncionarioDTO> funcionarioDtoList = funcionarioService.buscarTodos().stream()
@@ -44,6 +49,7 @@ public class FuncionarioController {
 		return ResponseEntity.ok().body(funcionarioDtoList);
 	}
 
+	@ApiOperation(value = "Realiza a inserção de um funcionário com os dados inseridos no corpo da requisição. ")
 	@PostMapping
 	public ResponseEntity<FuncionarioDTO> inserir(@Valid @RequestBody final FuncionarioDTO funcionarioDto) {
 		Funcionario funcionario = funcionarioService.inserir(funcionarioDto);
@@ -53,6 +59,7 @@ public class FuncionarioController {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value = "Atualiza os dados desejados de um funcionario já inserido. ")
 	@PutMapping("/{numSequencial}")
 	public ResponseEntity<FuncionarioDTO> atualizarDados(@PathVariable final Long numSequencial,
 			@Valid @RequestBody FuncionarioDTO funcionarioDto) {
@@ -61,12 +68,14 @@ public class FuncionarioController {
 		return ResponseEntity.ok().body(novoFuncionario);
 	}
 
+	@ApiOperation(value = "Remove o funcionario desejado a partir do seu número sequencial único. ")
 	@DeleteMapping("/{numSequencial}")
 	public ResponseEntity<Void> remover(@PathVariable final Long numSequencial) {
 		funcionarioService.remover(numSequencial);
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value = "Realiza a consulta de saldo do funcionario desejado. ")
 	@GetMapping("/saldo/{numSequencial}")
 	public ResponseEntity<BigDecimal> consultarSaldo(@PathVariable final Long numSequencial) {
 		FuncionarioDTO funcionarioDto = new FuncionarioDTO(funcionarioService.consultarSaldo(numSequencial));
