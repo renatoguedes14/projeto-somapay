@@ -31,7 +31,7 @@ public class FuncionarioController {
 	private FuncionarioService funcionarioService;
 
 	@GetMapping("/{numSequencial}")
-	public ResponseEntity<FuncionarioDTO> buscar(@PathVariable Long numSequencial) {
+	public ResponseEntity<FuncionarioDTO> buscar(@PathVariable final Long numSequencial) {
 		FuncionarioDTO funcionarioDto = new FuncionarioDTO(funcionarioService.buscarFuncionario(numSequencial));
 		return ResponseEntity.ok().body(funcionarioDto);
 	}
@@ -45,7 +45,7 @@ public class FuncionarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<FuncionarioDTO> inserir(@Valid @RequestBody FuncionarioDTO funcionarioDto) {
+	public ResponseEntity<FuncionarioDTO> inserir(@Valid @RequestBody final FuncionarioDTO funcionarioDto) {
 		Funcionario funcionario = funcionarioService.inserir(funcionarioDto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{numSequencial}")
 				.buildAndExpand(funcionario.getNumSequencial()).toUri();
@@ -53,8 +53,8 @@ public class FuncionarioController {
 		return ResponseEntity.created(uri).build();
 	}
 
-	@PutMapping("/{numSequencial")
-	public ResponseEntity<FuncionarioDTO> atualizarDados(@PathVariable Long numSequencial,
+	@PutMapping("/{numSequencial}")
+	public ResponseEntity<FuncionarioDTO> atualizarDados(@PathVariable final Long numSequencial,
 			@Valid @RequestBody FuncionarioDTO funcionarioDto) {
 		FuncionarioDTO novoFuncionario = new FuncionarioDTO(
 				funcionarioService.atualizarDados(numSequencial, funcionarioDto));
@@ -62,7 +62,8 @@ public class FuncionarioController {
 	}
 
 	@DeleteMapping("/{numSequencial}")
-	public ResponseEntity<Void> remover(@PathVariable Long numSequencial) {
+	public ResponseEntity<Void> remover(@PathVariable final Long numSequencial) {
+		funcionarioService.remover(numSequencial);
 		return ResponseEntity.noContent().build();
 	}
 

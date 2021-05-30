@@ -27,8 +27,10 @@ public class EmpresaService {
 	private EmpresaRepository empresaRepository;
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
+	@Autowired
+	private TransacaoService transacaoService;
 
-	public Empresa buscarEmpresa(Long numSequencial) {
+	public Empresa buscarEmpresa(final Long numSequencial) {
 		Optional<Empresa> empresa = empresaRepository.findById(numSequencial);
 		return empresa.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado. Código: " + numSequencial + "Tipo: " + Empresa.class.getName()));
@@ -38,7 +40,7 @@ public class EmpresaService {
 		return empresaRepository.findAll();
 	}
 
-	public Empresa inserir(EmpresaDTO empresaDto) {
+	public Empresa inserir(final EmpresaDTO empresaDto) {
 		if (findByCnpj(empresaDto) != null) {
 			throw new DataIntegrityViolationException("Empresa já cadastrada na base de dados. ");
 		}
@@ -46,7 +48,7 @@ public class EmpresaService {
 				empresaDto.getSaldoAtual()));
 	}
 
-	public Empresa atualizarDados(Long numSequencial, @Valid EmpresaDTO empresaDto) {
+	public Empresa atualizarDados(final Long numSequencial, @Valid final EmpresaDTO empresaDto) {
 		Empresa empresa = buscarEmpresa(numSequencial);
 
 		if (findByCnpj(empresaDto) != null && findByCnpj(empresaDto).getNumSequencial() != numSequencial) {
@@ -59,7 +61,7 @@ public class EmpresaService {
 		return empresaRepository.save(empresa);
 	}
 
-	public void remover(Long numSequencial) {
+	public void remover(final Long numSequencial) {
 		Empresa empresa = buscarEmpresa(numSequencial);
 		if (empresa.getFuncionariosList().size() > 0) {
 			throw new DataIntegrityViolationException("A empresa possui um ou mais funcionários vinculados a ela. ");
@@ -67,7 +69,7 @@ public class EmpresaService {
 		empresaRepository.delete(empresa);
 	}
 
-	public Empresa consultarSaldo(Long numSequencial) {
+	public Empresa consultarSaldo(final Long numSequencial) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(numSequencial);
 		if (empresaOpt.isPresent()) {
 			return empresaOpt.get();
@@ -75,7 +77,7 @@ public class EmpresaService {
 		throw new ObjectNotFoundException("Objeto não encontrado. ");
 	}
 
-	public void transferir(TransacaoRequest request) {
+	public void transferir(final TransacaoRequest request) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(request.getEmpresaNumSequencial());
 		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(request.getCpfFuncionario());
 
@@ -94,15 +96,15 @@ public class EmpresaService {
 			throw new DataIntegrityViolationException("Saldo insuficiente. ");
 		}
 
-		empresa.sacar(request.getValorTransacao());
-		funcionario.depositar(request.getValorTransacao());
+		transacaoService.sacar(empresa.getNumSequencial(), request.getValorTransacao());
+		transacaoService.depositar(funcionario.getNumSequencial(), request.getValorTransacao());
 
 		empresaRepository.save(empresa);
 		funcionarioRepository.save(funcionario);
 
 	}
 
-	public ResponseEntity<?> transferirC(TransacaoRequest form) {
+	public ResponseEntity<?> transferirC(final TransacaoRequest form) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(form.getEmpresaNumSequencial());
 		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(form.getCpfFuncionario());
 
@@ -130,7 +132,7 @@ public class EmpresaService {
 		return ResponseEntity.ok("Transação realizada com sucesso. ");
 	}
 
-	private Empresa findByCnpj(EmpresaDTO empresaDto) {
+	private Empresa findByCnpj(final EmpresaDTO empresaDto) {
 		Empresa empresa = empresaRepository.findByCnpj(empresaDto.getCnpj());
 		if (empresa != null) {
 			return empresa;

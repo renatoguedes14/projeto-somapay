@@ -32,7 +32,7 @@ public class EmpresaController {
 	private EmpresaService empresaService;
 
 	@GetMapping("/{numSequencial}")
-	public ResponseEntity<EmpresaDTO> buscar(@PathVariable Long numSequencial) {
+	public ResponseEntity<EmpresaDTO> buscar(@PathVariable final Long numSequencial) {
 		EmpresaDTO empresaDto = new EmpresaDTO(empresaService.buscarEmpresa(numSequencial));
 		return ResponseEntity.ok().body(empresaDto);
 	}
@@ -46,7 +46,7 @@ public class EmpresaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<EmpresaDTO> inserir(@Valid @RequestBody EmpresaDTO empresaDto) {
+	public ResponseEntity<EmpresaDTO> inserir(@Valid @RequestBody final EmpresaDTO empresaDto) {
 		Empresa empresa = empresaService.inserir(empresaDto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{numSequencial}")
 				.buildAndExpand(empresa.getNumSequencial()).toUri();
@@ -55,14 +55,14 @@ public class EmpresaController {
 	}
 
 	@PutMapping("/{numSequencial}")
-	public ResponseEntity<EmpresaDTO> atualizarDados(@PathVariable Long numSequencial,
+	public ResponseEntity<EmpresaDTO> atualizarDados(@PathVariable final Long numSequencial,
 			@Valid @RequestBody EmpresaDTO empresaDto) {
 		EmpresaDTO novaEmpresa = new EmpresaDTO(empresaService.atualizarDados(numSequencial, empresaDto));
 		return ResponseEntity.ok().body(novaEmpresa);
 	}
 
 	@DeleteMapping("/{numSequencial}")
-	public ResponseEntity<Void> remover(@PathVariable Long numSequencial) {
+	public ResponseEntity<Void> remover(@PathVariable final Long numSequencial) {
 		empresaService.remover(numSequencial);
 		return ResponseEntity.noContent().build();
 	}
@@ -74,7 +74,7 @@ public class EmpresaController {
 	}
 
 	@PostMapping("/transferir")
-	public ResponseEntity<?> transferir(@Valid @RequestBody TransacaoRequest request) {
+	public ResponseEntity<?> transferir(@Valid @RequestBody final TransacaoRequest request) {
 		empresaService.transferir(request);
 		return ResponseEntity.ok("Transação realizada com sucesso. ");
 	}

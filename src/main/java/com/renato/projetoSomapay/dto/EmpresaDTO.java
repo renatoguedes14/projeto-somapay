@@ -16,16 +16,8 @@ public class EmpresaDTO {
 		super();
 	}
 
-	public EmpresaDTO(Empresa empresa) {
+	public EmpresaDTO(final Empresa empresa) {
 		super();
-		this.numSequencial = empresa.getNumSequencial();
-		this.nome = empresa.getNome();
-		this.cnpj = empresa.getCnpj();
-		this.endereco = empresa.getEndereco();
-		this.saldoAtual = empresa.getSaldoAtual();
-	}
-
-	public void converter(final Empresa empresa) {
 		this.numSequencial = empresa.getNumSequencial();
 		this.nome = empresa.getNome();
 		this.cnpj = empresa.getCnpj();
