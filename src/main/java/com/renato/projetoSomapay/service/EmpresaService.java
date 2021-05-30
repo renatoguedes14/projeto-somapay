@@ -1,81 +1,140 @@
 package com.renato.projetoSomapay.service;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.renato.projetoSomapay.controller.request.TransacaoRequest;
 import com.renato.projetoSomapay.dto.EmpresaDTO;
-import com.renato.projetoSomapay.form.EmpresaForm;
-import com.renato.projetoSomapay.form.TransacaoForm;
 import com.renato.projetoSomapay.model.Empresa;
 import com.renato.projetoSomapay.model.Funcionario;
 import com.renato.projetoSomapay.repository.EmpresaRepository;
 import com.renato.projetoSomapay.repository.FuncionarioRepository;
-
-import net.minidev.json.JSONObject;
+import com.renato.projetoSomapay.service.exception.DataIntegrityViolationException;
+import com.renato.projetoSomapay.service.exception.ObjectNotFoundException;
 
 @Service
+@Transactional
 public class EmpresaService {
 
 	@Autowired
-	private EmpresaRepository repository;
+	private EmpresaRepository empresaRepository;
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 
-	public ResponseEntity<?> consultarSalto(Long numSequencial) {
-		Optional<Empresa> empresaOpt = repository.findById(numSequencial);
-		if (empresaOpt.isPresent()) {
-			JSONObject response = new JSONObject();
-			response.appendField("saldo", empresaOpt.get().getSaldoAtual());
-
-			return ResponseEntity.ok().body(response);
-		}
-		return ResponseEntity.notFound().build();
+	public Empresa buscarEmpresa(Long numSequencial) {
+		Optional<Empresa> empresa = empresaRepository.findById(numSequencial);
+		return empresa.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado. Código: " + numSequencial + "Tipo: " + Empresa.class.getName()));
 	}
 
-	public ResponseEntity<?> inserir(EmpresaForm form) {
-		Empresa empresa = form.converter();
+	public List<Empresa> buscarTodos() {
+		return empresaRepository.findAll();
+	}
 
-		boolean exists = repository.existsByCnpj(empresa.getCnpj());
-
-		if (exists) {
-			return ResponseEntity.badRequest().body("Empresa já cadastrada na base de dados. ");
+	public Empresa inserir(EmpresaDTO empresaDto) {
+		if (findByCnpj(empresaDto) != null) {
+			throw new DataIntegrityViolationException("Empresa já cadastrada na base de dados. ");
 		}
+		return empresaRepository.save(new Empresa(empresaDto.getNome(), empresaDto.getCnpj(), empresaDto.getEndereco(),
+				empresaDto.getSaldoAtual()));
+	}
 
-		repository.save(empresa);
+	public Empresa atualizarDados(Long numSequencial, @Valid EmpresaDTO empresaDto) {
+		Empresa empresa = buscarEmpresa(numSequencial);
 
-		EmpresaDTO empresaDto = new EmpresaDTO();
-		empresaDto.converter(empresa);
-		return ResponseEntity.created(null).body(empresaDto);
+		if (findByCnpj(empresaDto) != null && findByCnpj(empresaDto).getNumSequencial() != numSequencial) {
+			throw new DataIntegrityViolationException("CNPJ já cadastrado na base de dados em outra empresa. ");
+		}
+		empresa.setNome(empresaDto.getNome());
+		empresa.setCnpj(empresaDto.getCnpj());
+		empresa.setEndereco(empresaDto.getEndereco());
+		empresa.setSaldoAtual(empresaDto.getSaldoAtual());
+		return empresaRepository.save(empresa);
+	}
+
+	public void remover(Long numSequencial) {
+		Empresa empresa = buscarEmpresa(numSequencial);
+		if (empresa.getFuncionariosList().size() > 0) {
+			throw new DataIntegrityViolationException("A empresa possui um ou mais funcionários vinculados a ela. ");
+		}
+		empresaRepository.delete(empresa);
+	}
+
+	public Empresa consultarSaldo(Long numSequencial) {
+		Optional<Empresa> empresaOpt = empresaRepository.findById(numSequencial);
+		if (empresaOpt.isPresent()) {
+			return empresaOpt.get();
+		}
+		throw new ObjectNotFoundException("Objeto não encontrado. ");
 	}
 	
-	public ResponseEntity<?> transferir(TransacaoForm form) {
-		Optional<Empresa> empresaOpt = repository.findById(form.getEmpresaNumSequencial());
-		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByCpf(form.getCpfFuncionario());
+	public void transferir(TransacaoRequest request) {
+		Optional<Empresa> empresaOpt = empresaRepository.findById(request.getEmpresaNumSequencial());
+		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByCpf(request.getCpfFuncionario());
 		
 		if (!empresaOpt.isPresent()) {
-			return ResponseEntity.badRequest().body("Empresa não encontrada na base de dados. ");
+			throw new ObjectNotFoundException("Empresa não encontrada. ");
 		}
 		
 		if (!funcionarioOpt.isPresent()) {
-			return ResponseEntity.badRequest().body("Funcionário não encontrado na base de dados. ");
+			throw new ObjectNotFoundException("Funcionario não encontrado. ");
 		}
 		
 		Empresa empresa = empresaOpt.get();
 		Funcionario funcionario = funcionarioOpt.get();
 		
-		if(form.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
-			return ResponseEntity.badRequest().body("O saldo é insuficiente para realizar a transação. ");
+		if (request.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
+			throw new DataIntegrityViolationException("Saldo insuficiente. ");
 		}
 		
-		empresa.sacar(form.getValorTransacao());
-		funcionario.depositar(form.getValorTransacao());
+		empresa.sacar(request.getValorTransacao());
+		funcionario.depositar(request.getValorTransacao());
 		
-		repository.save(empresa);
+		empresaRepository.save(empresa);
 		funcionarioRepository.save(funcionario);
 		
+	}
+
+	public ResponseEntity<?> transferirC(TransacaoRequest form) {
+		Optional<Empresa> empresaOpt = empresaRepository.findById(form.getEmpresaNumSequencial());
+		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByCpf(form.getCpfFuncionario());
+
+		if (!empresaOpt.isPresent()) {
+			return ResponseEntity.badRequest().body("Empresa não encontrada na base de dados. ");
+		}
+
+		if (!funcionarioOpt.isPresent()) {
+			return ResponseEntity.badRequest().body("Funcionário não encontrado na base de dados. ");
+		}
+
+		Empresa empresa = empresaOpt.get();
+		Funcionario funcionario = funcionarioOpt.get();
+
+		if (form.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
+			return ResponseEntity.badRequest().body("O saldo é insuficiente para realizar a transação. ");
+		}
+
+		empresa.sacar(form.getValorTransacao());
+		funcionario.depositar(form.getValorTransacao());
+
+		empresaRepository.save(empresa);
+		funcionarioRepository.save(funcionario);
+
 		return ResponseEntity.ok("Transação realizada com sucesso. ");
+	}
+
+	private Empresa findByCnpj(EmpresaDTO empresaDto) {
+		Empresa empresa = empresaRepository.findByCnpj(empresaDto.getCnpj());
+		if (empresa != null) {
+			return empresa;
+		}
+		return null;
 	}
 }

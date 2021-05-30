@@ -3,6 +3,7 @@ package com.renato.projetoSomapay.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,13 +18,18 @@ public class Funcionario implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "num_sequencial")
 	private Long numSequencial;
+	@Column(name = "nome")
 	private String nome;
+	@Column(name = "cpf")
 	private String cpf;
+	@Column(name = "endereco")
 	private String endereco;
+	@Column(name = "saldo_atual")
 	private BigDecimal saldoAtual;
 	@ManyToOne
-	@JoinColumn(name = "empresa", referencedColumnName = "numSequencial")
+	@JoinColumn(name = "empresa", referencedColumnName = "num_sequencial")
 	private Empresa empresa;
 
 	public Funcionario() {

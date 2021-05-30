@@ -1,6 +1,5 @@
 package com.renato.projetoSomapay.controller;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.renato.projetoSomapay.form.FuncionarioForm;
+import com.renato.projetoSomapay.controller.request.FuncionarioRequest;
 import com.renato.projetoSomapay.service.FuncionarioService;
 
 @RestController
-@RequestMapping(value = "/funcionarios")
+@RequestMapping(value = "/funcionario")
 public class FuncionarioController {
 	
 	@Autowired
-	private FuncionarioService service;
+	private FuncionarioService funcionarioService;
 	
 	@GetMapping("/saldo/{numSequencial}")
-	public ResponseEntity<?> consultarSaldo(@PathVariable Long numSequencial) {
-		return service.consultarSaldo(numSequencial);
+	public ResponseEntity<?> consultarSaldo(@PathVariable final Long numSequencial) {
+		return funcionarioService.consultarSaldo(numSequencial);
 	}
 	
-	@Transactional
 	@PostMapping
-	public ResponseEntity<?> inserir(@RequestBody @Valid FuncionarioForm form) {
-		return service.inserir(form);
+	public ResponseEntity<?> inserir(@RequestBody @Valid final FuncionarioRequest request) {
+		return funcionarioService.inserir(request);
 	}
 }

@@ -1,4 +1,4 @@
-package com.renato.projetoSomapay.form;
+package com.renato.projetoSomapay.controller.request;
 
 import java.math.BigDecimal;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import com.renato.projetoSomapay.model.Empresa;
 
-public class EmpresaForm {
+public class EmpresaRequest {
 
 	@NotNull
 	private String nome;

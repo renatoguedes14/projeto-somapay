@@ -11,8 +11,21 @@ public class EmpresaDTO {
 	private String cnpj;
 	private String endereco;
 	private BigDecimal saldoAtual;
+	
+	public EmpresaDTO() {
+		super();
+	}
+	
+	public EmpresaDTO(Empresa empresa) {
+		super();
+		this.numSequencial = empresa.getNumSequencial();
+		this.nome = empresa.getNome();
+		this.cnpj = empresa.getCnpj();
+		this.endereco = empresa.getEndereco();
+		this.saldoAtual = empresa.getSaldoAtual();
+	}
 
-	public void converter(Empresa empresa) {
+	public void converter(final Empresa empresa) {
 		this.numSequencial = empresa.getNumSequencial();
 		this.nome = empresa.getNome();
 		this.cnpj = empresa.getCnpj();
