@@ -16,7 +16,7 @@ public class EmpresaRequest {
 	private String endereco;
 	@NotNull
 	private BigDecimal saldo;
-	
+
 	public Empresa converter() {
 		Empresa empresa = new Empresa(this.nome, this.cnpj, this.endereco, this.saldo);
 		return empresa;

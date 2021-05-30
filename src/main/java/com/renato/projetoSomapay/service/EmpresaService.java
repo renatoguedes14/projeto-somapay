@@ -74,37 +74,37 @@ public class EmpresaService {
 		}
 		throw new ObjectNotFoundException("Objeto não encontrado. ");
 	}
-	
+
 	public void transferir(TransacaoRequest request) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(request.getEmpresaNumSequencial());
-		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByCpf(request.getCpfFuncionario());
-		
+		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(request.getCpfFuncionario());
+
 		if (!empresaOpt.isPresent()) {
 			throw new ObjectNotFoundException("Empresa não encontrada. ");
 		}
-		
+
 		if (!funcionarioOpt.isPresent()) {
 			throw new ObjectNotFoundException("Funcionario não encontrado. ");
 		}
-		
+
 		Empresa empresa = empresaOpt.get();
 		Funcionario funcionario = funcionarioOpt.get();
-		
+
 		if (request.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
 			throw new DataIntegrityViolationException("Saldo insuficiente. ");
 		}
-		
+
 		empresa.sacar(request.getValorTransacao());
 		funcionario.depositar(request.getValorTransacao());
-		
+
 		empresaRepository.save(empresa);
 		funcionarioRepository.save(funcionario);
-		
+
 	}
 
 	public ResponseEntity<?> transferirC(TransacaoRequest form) {
 		Optional<Empresa> empresaOpt = empresaRepository.findById(form.getEmpresaNumSequencial());
-		Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByCpf(form.getCpfFuncionario());
+		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(form.getCpfFuncionario());
 
 		if (!empresaOpt.isPresent()) {
 			return ResponseEntity.badRequest().body("Empresa não encontrada na base de dados. ");

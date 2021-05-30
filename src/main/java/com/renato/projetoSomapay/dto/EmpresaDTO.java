@@ -11,11 +11,11 @@ public class EmpresaDTO {
 	private String cnpj;
 	private String endereco;
 	private BigDecimal saldoAtual;
-	
+
 	public EmpresaDTO() {
 		super();
 	}
-	
+
 	public EmpresaDTO(Empresa empresa) {
 		super();
 		this.numSequencial = empresa.getNumSequencial();

@@ -60,7 +60,7 @@ public class EmpresaController {
 		EmpresaDTO novaEmpresa = new EmpresaDTO(empresaService.atualizarDados(numSequencial, empresaDto));
 		return ResponseEntity.ok().body(novaEmpresa);
 	}
-	
+
 	@DeleteMapping("/{numSequencial}")
 	public ResponseEntity<Void> remover(@PathVariable Long numSequencial) {
 		empresaService.remover(numSequencial);
@@ -72,15 +72,10 @@ public class EmpresaController {
 		EmpresaDTO empresaDto = new EmpresaDTO(empresaService.consultarSaldo(numSequencial));
 		return ResponseEntity.ok().body(empresaDto.getSaldoAtual());
 	}
-	
+
 	@PostMapping("/transferir")
 	public ResponseEntity<?> transferir(@Valid @RequestBody TransacaoRequest request) {
 		empresaService.transferir(request);
 		return ResponseEntity.ok("Transação realizada com sucesso. ");
 	}
-
-//	@PostMapping("/transferir")
-//	public ResponseEntity<?> transferir(@RequestBody @Valid final TransacaoRequest request) {
-//		return empresaService.transferir(request);
-//	}
 }

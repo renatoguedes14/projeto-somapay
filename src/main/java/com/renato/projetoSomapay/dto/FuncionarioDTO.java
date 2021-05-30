@@ -13,6 +13,19 @@ public class FuncionarioDTO {
 	private Long empresaNumSequencial;
 	private BigDecimal saldoAtual;
 
+	public FuncionarioDTO() {
+		super();
+	}
+
+	public FuncionarioDTO(Funcionario funcionario) {
+		this.numSequencial = funcionario.getNumSequencial();
+		this.nome = funcionario.getNome();
+		this.cpf = funcionario.getCpf();
+		this.endereco = funcionario.getEndereco();
+		this.empresaNumSequencial = funcionario.getEmpresa().getNumSequencial();
+		this.saldoAtual = funcionario.getSaldoAtual();
+	}
+
 	public void converter(Funcionario funcionario) {
 		this.numSequencial = funcionario.getNumSequencial();
 		this.nome = funcionario.getNome();

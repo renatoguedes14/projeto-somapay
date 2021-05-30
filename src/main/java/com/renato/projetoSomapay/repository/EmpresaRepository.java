@@ -9,7 +9,7 @@ import com.renato.projetoSomapay.model.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
 
 	boolean existsByCnpj(String cnpj);
-	
+
 	@Query("SELECT obj FROM Empresa obj WHERE obj.cnpj =:cnpj")
 	Empresa findByCnpj(@Param("cnpj") String cnpj);
 }
