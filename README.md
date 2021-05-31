@@ -1,4 +1,14 @@
-# projeto-somapay
-Este projeto foi desenvolvido por mim para o processo seletivo da vaga de Desenvolvedor Júnior da Somapay.
-Para iniciá-lo, basta rodar o ProjetoSomapayApplication.java como Spring Boot App e fazer os requests por POSTMAN ou como preferir.
-A porta está configurada como 8091.
+# 1 - Como executar a aplicação 
+<b>Para compilar e executar: </b> na raíz do projeto, execute o comando: mvn spring-boot:run
+
+# 2 - 
+
+# 3 - Informações adicionais:
+
+<b>Tecnologias e bibliotecas utilizadas: </b> Java 11, Spring Boot e Spring Data, PostgreSQL, Project Lombok e Swagger UI
+
+## Swagger OpenAPI
+http://localhost:8091/swagger-ui/index.html
+
+
+<b>Este projeto foi desenvolvido por Renato Guedes para o processo seletivo da vaga de Desenvolvedor de back-end Júnior da Somapay.</b>
