@@ -14,8 +14,8 @@ import com.renato.projetoSomapay.model.Empresa;
 import com.renato.projetoSomapay.model.Funcionario;
 import com.renato.projetoSomapay.repository.EmpresaRepository;
 import com.renato.projetoSomapay.repository.FuncionarioRepository;
-import com.renato.projetoSomapay.service.exception.DataIntegrityViolationException;
-import com.renato.projetoSomapay.service.exception.ObjectNotFoundException;
+import com.renato.projetoSomapay.service.exception.ViolacaoIntegridadeDosDadosException;
+import com.renato.projetoSomapay.service.exception.ObjetoNaoEncontradoException;
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class FuncionarioService {
 
 	public Funcionario buscarFuncionario(final Long numSequencial) {
 		Optional<Funcionario> funcionario = funcionarioRepository.findById(numSequencial);
-		return funcionario.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. "));
+		return funcionario.orElseThrow(() -> new ObjetoNaoEncontradoException("Objeto não encontrado. "));
 	}
 
 	public List<Funcionario> buscarTodos() {
@@ -37,7 +37,7 @@ public class FuncionarioService {
 
 	public Funcionario inserir(final FuncionarioDTO funcionarioDto) {
 		if (findByCpf(funcionarioDto) != null) {
-			throw new DataIntegrityViolationException("Funcionário já cadastrado. ");
+			throw new ViolacaoIntegridadeDosDadosException("Funcionário já cadastrado. ");
 		}
 		Optional<Empresa> empresa = empresaRepository.findById(funcionarioDto.getEmpresaNumSequencial());
 		return funcionarioRepository.save(new Funcionario(funcionarioDto.getNome(), funcionarioDto.getCpf(),
@@ -48,7 +48,7 @@ public class FuncionarioService {
 		Funcionario funcionario = buscarFuncionario(numSequencial);
 
 		if (findByCpf(funcionarioDto) != null && findByCpf(funcionarioDto).getNumSequencial() != numSequencial) {
-			throw new DataIntegrityViolationException("CPF já cadastrado na base de dados em outro funcionário. ");
+			throw new ViolacaoIntegridadeDosDadosException("CPF já cadastrado na base de dados em outro funcionário. ");
 		}
 		Optional<Empresa> empresa = empresaRepository.findById(funcionarioDto.getEmpresaNumSequencial());
 
@@ -70,7 +70,7 @@ public class FuncionarioService {
 		if (funcionarioOpt.isPresent()) {
 			return funcionarioOpt.get();
 		}
-		throw new ObjectNotFoundException("Objeto não encontrado. ");
+		throw new ObjetoNaoEncontradoException("Objeto não encontrado. ");
 	}
 
 	private Funcionario findByCpf(final FuncionarioDTO funcionarioDto) {

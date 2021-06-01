@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 import com.renato.projetoSomapay.model.Empresa;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class EmpresaDTO {
 
 	private Long numSequencial;
@@ -14,10 +16,6 @@ public class EmpresaDTO {
 	private String cnpj;
 	private String endereco;
 	private BigDecimal saldoAtual;
-
-	public EmpresaDTO() {
-		super();
-	}
 
 	public EmpresaDTO(final Empresa empresa) {
 		super();

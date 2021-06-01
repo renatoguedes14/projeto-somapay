@@ -15,8 +15,8 @@ import com.renato.projetoSomapay.model.Empresa;
 import com.renato.projetoSomapay.model.Funcionario;
 import com.renato.projetoSomapay.repository.EmpresaRepository;
 import com.renato.projetoSomapay.repository.FuncionarioRepository;
-import com.renato.projetoSomapay.service.exception.DataIntegrityViolationException;
-import com.renato.projetoSomapay.service.exception.ObjectNotFoundException;
+import com.renato.projetoSomapay.service.exception.ViolacaoIntegridadeDosDadosException;
+import com.renato.projetoSomapay.service.exception.ObjetoNaoEncontradoException;
 
 @Service
 @Transactional
@@ -31,8 +31,8 @@ public class EmpresaService {
 
 	public Empresa buscarEmpresa(final Long numSequencial) {
 		Optional<Empresa> empresa = empresaRepository.findById(numSequencial);
-		return empresa.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado. Código: " + numSequencial + "Tipo: " + Empresa.class.getName()));
+		return empresa.orElseThrow(() -> new ObjetoNaoEncontradoException(
+				"Objeto não encontrado." ));
 	}
 
 	public List<Empresa> buscarTodos() {
@@ -41,7 +41,7 @@ public class EmpresaService {
 
 	public Empresa inserir(final EmpresaDTO empresaDto) {
 		if (findByCnpj(empresaDto) != null) {
-			throw new DataIntegrityViolationException("Empresa já cadastrada na base de dados. ");
+			throw new ViolacaoIntegridadeDosDadosException("Empresa já cadastrada na base de dados. ");
 		}
 		return empresaRepository.save(new Empresa(empresaDto.getNome(), empresaDto.getCnpj(), empresaDto.getEndereco(),
 				empresaDto.getSaldoAtual()));
@@ -51,7 +51,7 @@ public class EmpresaService {
 		Empresa empresa = buscarEmpresa(numSequencial);
 
 		if (findByCnpj(empresaDto) != null && findByCnpj(empresaDto).getNumSequencial() != numSequencial) {
-			throw new DataIntegrityViolationException("CNPJ já cadastrado na base de dados em outra empresa. ");
+			throw new ViolacaoIntegridadeDosDadosException("CNPJ já cadastrado na base de dados em outra empresa. ");
 		}
 		empresa.setNome(empresaDto.getNome());
 		empresa.setCnpj(empresaDto.getCnpj());
@@ -63,7 +63,7 @@ public class EmpresaService {
 	public void remover(final Long numSequencial) {
 		Empresa empresa = buscarEmpresa(numSequencial);
 		if (empresa.getFuncionariosList().size() > 0) {
-			throw new DataIntegrityViolationException("A empresa possui um ou mais funcionários vinculados a ela. ");
+			throw new ViolacaoIntegridadeDosDadosException("A empresa possui um ou mais funcionários vinculados a ela. ");
 		}
 		empresaRepository.delete(empresa);
 	}
@@ -73,7 +73,7 @@ public class EmpresaService {
 		if (empresaOpt.isPresent()) {
 			return empresaOpt.get();
 		}
-		throw new ObjectNotFoundException("Objeto não encontrado. ");
+		throw new ObjetoNaoEncontradoException("Objeto não encontrado. ");
 	}
 
 	public void transferir(final TransacaoRequest request) {
@@ -81,18 +81,18 @@ public class EmpresaService {
 		Optional<Funcionario> funcionarioOpt = funcionarioRepository.getByCpf(request.getCpfFuncionario());
 
 		if (!empresaOpt.isPresent()) {
-			throw new ObjectNotFoundException("Empresa não encontrada. ");
+			throw new ObjetoNaoEncontradoException("Empresa não encontrada. ");
 		}
 
 		if (!funcionarioOpt.isPresent()) {
-			throw new ObjectNotFoundException("Funcionario não encontrado. ");
+			throw new ObjetoNaoEncontradoException("Funcionario não encontrado. ");
 		}
 
 		Empresa empresa = empresaOpt.get();
 		Funcionario funcionario = funcionarioOpt.get();
 
 		if (request.getValorTransacao().compareTo(empresa.getSaldoAtual()) == 1) {
-			throw new DataIntegrityViolationException("Saldo insuficiente. ");
+			throw new ViolacaoIntegridadeDosDadosException("Saldo insuficiente. ");
 		}
 
 		transacaoService.sacar(empresa.getNumSequencial(), request.getValorTransacao());

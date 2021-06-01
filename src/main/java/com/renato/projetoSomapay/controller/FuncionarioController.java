@@ -25,6 +25,7 @@ import com.renato.projetoSomapay.service.FuncionarioService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 @Api(value = "/funcionario", description = "Operações de cadastro de funcionário, busca, atualização, remoção e consulta de saldo. ")
 @RestController
 @RequestMapping(value = "/funcionario")

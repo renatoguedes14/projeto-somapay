@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 import com.renato.projetoSomapay.model.Funcionario;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class FuncionarioDTO {
 
 	private Long numSequencial;
@@ -15,10 +17,6 @@ public class FuncionarioDTO {
 	private String endereco;
 	private Long empresaNumSequencial;
 	private BigDecimal saldoAtual;
-
-	public FuncionarioDTO() {
-		super();
-	}
 
 	public FuncionarioDTO(final Funcionario funcionario) {
 		this.numSequencial = funcionario.getNumSequencial();

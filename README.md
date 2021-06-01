@@ -9,7 +9,7 @@ Na raiz do projeto, execute o comando: mvn test
 
 <b>Tecnologias e bibliotecas utilizadas: </b> Java 11, Spring Boot e Spring Data, PostgreSQL, Project Lombok e Swagger UI
 
-## Swagger OpenAPI
+## Swagger
 http://localhost:8091/swagger-ui/index.html
 
 
