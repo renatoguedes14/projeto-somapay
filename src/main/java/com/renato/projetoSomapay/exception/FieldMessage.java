@@ -1,4 +1,4 @@
-package com.renato.projetoSomapay.controller.exception;
+package com.renato.projetoSomapay.exception;
 
 import java.io.Serializable;
 
@@ -11,11 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ErroPadrao implements Serializable {
+public class FieldMessage implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long timestamp;
-	private Integer status;
-	private String erro;
+	private String fieldName;
+	private String message;
 }

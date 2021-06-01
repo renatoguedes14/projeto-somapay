@@ -1,4 +1,4 @@
-package com.renato.projetoSomapay.controller.exception;
+package com.renato.projetoSomapay.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class ControllerExceptionHandler {
 	public ResponseEntity<ErroPadrao> objetoNaoEncontradoException(ObjetoNaoEncontradoException e) {
 		ErroPadrao erro = new ErroPadrao(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(), e.getMessage());
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
 	}
 
 	@ExceptionHandler(ViolacaoIntegridadeDosDadosException.class)

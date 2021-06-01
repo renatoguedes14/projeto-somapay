@@ -1,4 +1,4 @@
-package com.renato.projetoSomapay.controller.exception;
+package com.renato.projetoSomapay.exception;
 
 import java.util.ArrayList;
 import java.util.List;
